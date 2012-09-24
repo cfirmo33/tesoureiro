@@ -34,4 +34,27 @@ class ImportaExtratoControllerTest < ActionController::TestCase
 			assert_not_nil(trn.descricao, 'descricao')
 		end
 	end
+	
+	test "criar as transações" do
+		caixa = Caixa.first
+		assert_difference("Transacao.count", +3) do
+			xhr(:post, :cria_varias_transacoes, criar: { caixa_id: caixa.id, transacoes: {
+				'0' => { importar: 'true',  data: '01/05/2012', descricao: '1', valor: '100.00'},
+				'1' => { importar: 'true',  data: '01/05/2012', descricao: '2', valor: '-100.00'},
+				'2' => { importar: 'true',  data: '01/05/2012', descricao: '3', valor: '1300.00'},
+				'3' => { importar: 'false', data: '01/05/2012', descricao: '4', valor: '100.00'},
+				'4' => { importar: 'false', data: '01/05/2012', descricao: '5', valor: '100.00'}
+			}})
+			
+			trns = assigns(:transacoes_criadas)
+			assert_equal(3, trns.size)
+			trns.each do |t|
+				assert_equal(true, t.realizada, 'as transacoes devem ser realizadas')
+				assert_equal(caixa, t.caixa)
+				assert_equal(Date.new(2012,5,1), t.data, 'data')
+				assert(t.valor.in?([100, -100.00, 1300.00]), 'valor nao deu certo')
+				assert(t.descricao.in?(['1', '2', '3']), 'descricao nao deu certo')
+			end
+		end
+	end
 end

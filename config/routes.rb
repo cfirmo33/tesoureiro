@@ -5,6 +5,7 @@ Tesoureiro::Application.routes.draw do
 	namespace 'importa_extrato' do
 		get 'index'
 		post 'escolhe_transacoes'
+		post 'cria_varias_transacoes'
 	end
 
 	root to: 'transacoes#index'

@@ -6,7 +6,6 @@ class Transacao < ActiveRecord::Base
 	
 	scope :realizadas, where(realizada: true)
 	scope :previstas, where(realizada: false)
-	before_validation :valor_padrao_realizada
 	validates :data, :descricao, :valor, :caixa_id, presence: true
 	validate :valida_se_o_valor_eh_zero
 	validate :valida_se_o_caixa_existe
@@ -23,9 +22,6 @@ class Transacao < ActiveRecord::Base
 		
 	private
 	
-	def valor_padrao_realizada
-		self.realizada = false if self.realizada.nil?
-	end
 	def valida_se_o_valor_eh_zero
 		return if self.valor.nil?
 		self.errors.add(:valor, 'Não pode ser 0') if self.valor.zero?

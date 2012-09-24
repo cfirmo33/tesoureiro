@@ -4,21 +4,44 @@
 	Escolha as transações que deseja importar:
 </font>
 
-<table class="transacoes">
-	<thead>
-		<tr>
-			<th id='data'  align='left'>Data</th>
-			<th id='descricao' >Descrição</th>
-			<th id='valor'  align='right'>Valor</th>
-		</tr>
-	</thead>
-	<tbody>
-		<% @extrato.transacoes.each do |trn| %>
+<div id="transacoes">
+<%= form_for(:criar, url: importa_extrato_cria_varias_transacoes_path, remote: true) do |f| %>
+	<table class="transacoes">
+		<thead>
 			<tr>
-				<td><%= trn.data.to_s_br %></td>
-				<td><%= trn.descricao %></td>
-				<td><%= colore_valor trn.valor %></td>
+				<th><%= check_box_tag("selecionar_todos", false, true, onclick: "$('table.transacoes tbody input[type=checkbox]').attr('checked', this.checked)") %></th>
+				<th id='data' align='left'>Data</th>
+				<th id='descricao' >Descrição</th>
+				<th id='valor' align='right'>Valor</th>
 			</tr>
-		<% end %>
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			<% @extrato.transacoes.each_with_index do |trn, index| %>
+				<tr class='transacao' style="display: table-row;">
+					<td><%= check_box_tag("criar[transacoes][#{index}][importar]", true, true) %></td>
+					<td>
+						<%= trn.data.to_s_br %>
+						<%= hidden_field_tag("criar[transacoes]#{index}][data]", trn.data) %>
+					</td>
+					<td><%= text_field_tag("criar[transacoes]#{index}][descricao]", trn.descricao, size: '80') %></td>
+					<td>
+						<%= colore_valor trn.valor %>
+						<%= hidden_field_tag("criar[transacoes]#{index}][valor]", trn.valor) %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table><br>
+	importar transações select para o caixa: <%= f.select(:caixa_id, Caixa.all.map{|c| [c.nome, c.id]}) %>
+	<%= f.submit('Importar') %>
+	<%= image_tag('carregando.gif', id: 'carregando', style: 'display: none;') %>
+	
+<% end %>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+	$('form').bind('submit', function(){
+		$this.find('input[type=submit]').hide();
+		$this.find('img#carregando').show();
+	})
+</script>
