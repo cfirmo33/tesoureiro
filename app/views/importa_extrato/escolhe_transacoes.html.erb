@@ -1,0 +1,24 @@
+<h1>Escolha as transações que deseja importar</h1>
+<font color='grey'> 
+	O arquivo que escolheu tem <%= @extrato.transacoes.size %> transações.
+	Escolha as transações que deseja importar:
+</font>
+
+<table class="transacoes">
+	<thead>
+		<tr>
+			<th id='data'  align='left'>Data</th>
+			<th id='descricao' >Descrição</th>
+			<th id='valor'  align='right'>Valor</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @extrato.transacoes.each do |trn| %>
+			<tr>
+				<td><%= trn.data.to_s_br %></td>
+				<td><%= trn.descricao %></td>
+				<td><%= colore_valor trn.valor %></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

@@ -1,8 +1,12 @@
 Tesoureiro::Application.routes.draw do
-  resources :caixas
-
+	resources :caixas
 	resources :transacoes
-	
+
+	namespace 'importa_extrato' do
+		get 'index'
+		post 'escolhe_transacoes'
+	end
+
 	root to: 'transacoes#index'
 
 	# The priority is based upon order of creation:

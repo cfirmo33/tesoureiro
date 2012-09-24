@@ -1,0 +1,7 @@
+<h1> Escolha um arquivo para carregar: </h1>
+<%= form_for(:importar, url: importa_extrato_escolhe_transacoes_url, multipart: true) do |f| %>
+	Arquivo: <%= f.file_field(:arquivo) %>
+	do banco <%= f.select(:banco, Extrato::BANCOS_E_FORMATOS.keys) %>
+	em <%= f.select(:formato, Extrato::BANCOS_E_FORMATOS.values) %>
+	<%= f.submit('Ler arquivo') %>
+<% end %>
