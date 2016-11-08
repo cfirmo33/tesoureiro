@@ -19,5 +19,6 @@ cd tesoureiro
 bundle install
 rake db:create
 rake db:migrate
+rake db:seed
 rails server -e production
 ```
